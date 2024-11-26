@@ -1,11 +1,8 @@
-### Travail sur headmapping.sam car fichier mpping.sam trop lourd
-
 # Traitement de Fichiers SAM
 
 Ce projet vise à analyser et extraire des informations pertinentes à partir de fichiers SAM (Sequence Alignment/Map), un format standard utilisé pour stocker des données d'alignement issues de séquençages génomiques.
 
 ---
- Travail sur headmapping.sam car fichier mapping.sam trop lourd
 
 ## 🚀 Fonctionnalités principales
 
@@ -33,7 +30,7 @@ Avant de commencer, assurez-vous d'avoir installé :
 
 ---
 
-🚀 Utilisation
+## 🚀 Utilisation
 1. Vérification du fichier SAM en bash
 Exemples de sortie :
 * Si le fichier est valide :
