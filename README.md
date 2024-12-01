@@ -31,7 +31,7 @@ Avant de commencer, assurez-vous d'avoir installé :
 ---
 
 ## 🚀 Utilisation
-1. Vérification du fichier SAM en bash
+### 1. Vérification du fichier SAM en bash
 Exemples de sortie :
 * Si le fichier est valide :
 Le fichier test.sam est au format SAM.
@@ -39,4 +39,7 @@ Vous pouvez continuer avec ce fichier pour la suite du programme.
 * Si le fichier est invalide :
 Erreur : Le fichier test.sam n'est pas au format SAM.
 Veuillez changer de fichier d'entrée.
+###2.Création d'un dictionnaire : 
+Le dictionnaire à bien été créer quand le terminal affiche : .... 
+###3.Analyse du fichier 
 
