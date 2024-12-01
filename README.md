@@ -3,7 +3,6 @@
 Ce projet vise à analyser et extraire des informations pertinentes à partir de fichiers SAM (Sequence Alignment/Map), un format standard utilisé pour stocker des données d'alignement issues de séquençages génomiques.
 
 ---
-
 ## 🚀 Fonctionnalités principales
 
 - **Vérification du format SAM** : Validation des en-têtes et du nombre minimum de colonnes.
@@ -11,7 +10,6 @@ Ce projet vise à analyser et extraire des informations pertinentes à partir de
 - **Analyse des données** : Calcul de métriques importantes comme la qualité de mapping.
 
 ---
-
 ## 📂 Structure du projet
 
 - `verif_sam.sh` : Script Bash pour valider le fichier SAM.
@@ -20,16 +18,12 @@ Ce projet vise à analyser et extraire des informations pertinentes à partir de
 - `README.md` : Documentation du projet.
 
 ---
-
 ## 🛠 Prérequis
-
 Avant de commencer, assurez-vous d'avoir installé :
-
 - [Python 3.x](https://www.python.org/) (ou Bash, selon votre version préférée du script)
 - Git (facultatif, pour cloner le dépôt)
 
 ---
-
 ## 🚀 Utilisation
 ### 1. Vérification du fichier SAM en bash
 Exemples de sortie :
