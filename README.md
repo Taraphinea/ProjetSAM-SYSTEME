@@ -33,7 +33,7 @@ Vous pouvez continuer avec ce fichier pour la suite du programme.
 * Si le fichier est invalide :
 Erreur : Le fichier test.sam n'est pas au format SAM.
 Veuillez changer de fichier d'entrée.
-###2.Création d'un dictionnaire : 
+### 2.Création d'un dictionnaire : 
 Le dictionnaire à bien été créer quand le terminal affiche : .... 
-###3.Analyse du fichier 
+### 3.Analyse du fichier 
 
