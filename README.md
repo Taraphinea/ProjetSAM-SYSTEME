@@ -34,6 +34,6 @@ Vous pouvez continuer avec ce fichier pour la suite du programme.
 Erreur : Le fichier test.sam n'est pas au format SAM.
 Veuillez changer de fichier d'entrée.
 ### 2.Création d'un dictionnaire : 
-Le dictionnaire à bien été créer quand le terminal affiche : .... 
+Le dictionnaire à bien été créer quand le terminal affiche : Dictionnaire SAM créé avec "n" entrées.)
 ### 3.Analyse du fichier 
 
