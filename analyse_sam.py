@@ -84,4 +84,31 @@ print("\nNombre de reads par qualité de mapping :")
 for quality, count in sorted(reads_per_quality.items()):
     print(f"  Qualité {quality} : {count} reads")
 
+# Graphique du nombre de reads par intervalle de flag
+plt.figure(figsize=(10, 6))
+plt.bar(reads_per_flag_interval.keys(), reads_per_flag_interval.values(), width=8)
+plt.xlabel('Intervalle de flag')
+plt.ylabel('Nombre de reads')
+plt.title('Nombre de reads par intervalle de flag')
+plt.xticks(list(reads_per_flag_interval.keys()))
+plt.show()
 
+# Graphique du nombre de reads par chromosome en pourcentage
+chromosomes = list(reads_per_chromosome.keys())
+percentages = [(reads_per_chromosome[chrom] / total_reads) * 100 for chrom in chromosomes]
+
+plt.figure(figsize=(10, 6))
+plt.bar(chromosomes, percentages)
+plt.xlabel('Chromosome')
+plt.ylabel('Pourcentage de reads (%)')
+plt.title('Pourcentage de reads par chromosome')
+plt.xticks(rotation=90)
+plt.show()
+
+# Graphique du nombre de reads par qualité de mapping
+plt.figure(figsize=(10, 6))
+plt.bar(reads_per_quality.keys(), reads_per_quality.values())
+plt.xlabel('Qualité de mapping')
+plt.ylabel('Nombre de reads')
+plt.title('Nombre de reads par qualité de mapping')
+plt.show()
