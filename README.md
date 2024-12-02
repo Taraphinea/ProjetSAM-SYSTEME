@@ -20,7 +20,7 @@ Ce projet vise à analyser et extraire des informations pertinentes à partir de
 ---
 ## 🛠 Prérequis
 Avant de commencer, assurez-vous d'avoir installé :
-- [Python 3.x](https://www.python.org/) (ou Bash, selon votre version préférée du script)
+- [Python 3.x](https://www.python.org/) (ou Bash, selon votre version préférée du script. 
 - Git (facultatif, pour cloner le dépôt)
 
 ---
