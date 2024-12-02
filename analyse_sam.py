@@ -1,6 +1,6 @@
 # Dictionnaire pour stocker les données
 sam_data = {}
-
+## test
 # Ouvrir et lire le fichier SAM
 with open("headmapping.sam", "r") as sam_file:
     for line in sam_file:
