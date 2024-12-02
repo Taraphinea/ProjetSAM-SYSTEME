@@ -12,15 +12,15 @@ with open("headmapping.sam", "r") as sam_file:
         columns = line.strip().split('\t')
 
         # Extraire les informations
- read_name = columns[0]  # Colonne 1 : Nom du read
- flag = int(columns[1])  # Colonne 2 : Flag
- chromosome = columns[2]  # Colonne 3 : Chromosome
- position = int(columns[3])  # Colonne 4 : Position
- quality = int(columns[4])  # Colonne 5 : Qualité
- sequence = columns[9]  # Colonne 10 : Séquence nucléotidique
+        read_name = columns[0]  # Colonne 1 : Nom du read
+        flag = int(columns[1])  # Colonne 2 : Flag
+        chromosome = columns[2]  # Colonne 3 : Chromosome
+        position = int(columns[3])  # Colonne 4 : Position
+        quality = int(columns[4])  # Colonne 5 : Qualité
+        sequence = columns[9]  # Colonne 10 : Séquence nucléotidique
 
         # Ajouter les informations dans le dictionnaire
-     sam_data[read_name] = {
+        sam_data[read_name] = {
             "flag": flag,
             "chromosome": chromosome,
             "position": position,
@@ -29,8 +29,9 @@ with open("headmapping.sam", "r") as sam_file:
         }
 print(f"\nDictionnaire SAM créé avec {len(sam_data)} entrées.\n")
 
-import matplotlib.pyplot as plt 
-# Dictionnaires pour stocker les résultats des calculs
+import matplotlib.pyplot as plt
+
+    # Dictionnaires pour stocker les résultats des calculs
 reads_per_flag_interval = {}
 reads_per_chromosome = {}
 reads_per_quality = {}
@@ -62,6 +63,9 @@ for read_name, info in sam_data.items():
     # Compter les reads par qualité de mapping
     reads_per_quality[quality] = reads_per_quality.get(quality, 0) + 1
 
+    # Calculer le nombre total de reads valides après filtrage
+    total_reads = sum(reads_per_chromosome.values())
+
 # Afficher les résultats
 print("Nombre de reads par intervalle de flag (par 10) :")
 for interval, count in sorted(reads_per_flag_interval.items()):
@@ -71,7 +75,13 @@ print("\nNombre de reads par chromosome :")
 for chrom, count in reads_per_chromosome.items():
     print(f"  Chromosome {chrom} : {count} reads")
 
+print("\nNombre de reads par chromosome (en pourcentage) :")
+for chrom, count in reads_per_chromosome.items():
+    percentage = (count / total_reads) * 100  # Calcul du pourcentage
+    print(f"  Chromosome {chrom} : {count} reads ({percentage:.2f}%)")
+
 print("\nNombre de reads par qualité de mapping :")
 for quality, count in sorted(reads_per_quality.items()):
     print(f"  Qualité {quality} : {count} reads")
+
 
