@@ -1,39 +1,38 @@
-# Traitement de Fichiers SAM
+# SAM File Processing
 
-Ce projet vise à analyser et extraire des informations pertinentes à partir de fichiers SAM (Sequence Alignment/Map), un format standard utilisé pour stocker des données d'alignement issues de séquençages génomiques.
-
----
-## 🚀 Fonctionnalités principales
-
-- **Vérification du format SAM** : Validation des en-têtes et du nombre minimum de colonnes.
-- **Extraction des informations clés** : Nom des reads, flags, chromosome, position, qualité, séquence.
-- **Analyse des données** : Calcul de métriques importantes comme la qualité de mapping.
+This project aims to analyze and extract relevant information from SAM (Sequence Alignment/Map) files, a standard format used to store alignment data from genomic sequencing.
 
 ---
-## 📂 Structure du projet
+## 🚀 Main Features
 
-- `verif_sam.sh` : Script Bash pour valider le fichier SAM.
-- `analyse_sam.py` : Script Python pour extraire les données et effectuer l'analyse.
-- `headmapping.sam` : Fichier SAM d'exemple pour tester le workflow.
-- `README.md` : Documentation du projet.
-
----
-## 🛠 Prérequis
-Avant de commencer, assurez-vous d'avoir installé :
-- [Python 3.x](https://www.python.org/) (ou Bash, selon votre version préférée du script. 
-- Git (facultatif, pour cloner le dépôt)
+- **SAM Format Validation**: Validates headers and the minimum number of columns.
+- **Key Information Extraction**: Extracts read names, flags, chromosome, position, quality, and sequence.
+- **Data Analysis**: Calculates important metrics such as mapping quality.
 
 ---
-## 🚀 Utilisation
-### 1. Vérification du fichier SAM en bash
-Exemples de sortie :
-* Si le fichier est valide :
-Le fichier test.sam est au format SAM.
-Vous pouvez continuer avec ce fichier pour la suite du programme. 
-* Si le fichier est invalide :
-Erreur : Le fichier test.sam n'est pas au format SAM.
-Veuillez changer de fichier d'entrée.
-### 2.Création d'un dictionnaire : 
-Le dictionnaire à bien été créer quand le terminal affiche : Dictionnaire SAM créé avec "n" entrées.
-### 3.Analyse du fichier 
+## 📂 Project Structure
 
+- `verif_sam.sh`: Bash script to validate the SAM file.
+- `analyse_sam.py`: Python script to extract data and perform analysis.
+- `headmapping.sam`: Example SAM file for testing the workflow.
+- `README.md`: Project documentation.
+
+---
+## 🛠 Prerequisites
+Before you start, make sure to have installed:
+- [Python 3.x](https://www.python.org/) (or Bash, depending on your preferred version of the script).
+- Git (optional, for cloning the repository).
+
+---
+## 🚀 Usage
+### 1. SAM file validation in bash
+Example outputs:
+* If the file is valid:
+  The file test.sam is in SAM format.
+  You can continue with this file for the next steps in the program.
+* If the file is invalid:
+  Error: The file test.sam is not in SAM format.
+  Please choose a different input file.
+### 2. Creating a dictionary:
+The dictionary has been successfully created when the terminal displays: SAM Dictionary created with "n" entries. "Dictionnaire SAM créé avec "n" entrées."
+### 3. File analysis
