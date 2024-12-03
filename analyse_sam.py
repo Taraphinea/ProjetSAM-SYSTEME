@@ -84,6 +84,8 @@ print("\nNombre de reads par qualité de mapping :")
 for quality, count in sorted(reads_per_quality.items()):
     print(f"  Qualité {quality} : {count} reads")
 
+
+
 # Graphique du nombre de reads par intervalle de flag
 plt.figure(figsize=(10, 6))
 plt.bar(reads_per_flag_interval.keys(), reads_per_flag_interval.values(), width=8)
