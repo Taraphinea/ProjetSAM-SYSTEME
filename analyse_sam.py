@@ -111,9 +111,8 @@ def main():
         "mapped": mapped_percentage,
         "unmapped": unmapped_percentage
     }
-    print(f"\nDictionnaire des résultats de mapping :")
-    print(mapping_resultats) 
-
+    print(f"\nDictionnaire des résultats de mapping : {mapping_resultats}")
+    
     # Afficher les résultats
     print("Nombre de reads par intervalle de flag (par 10) :")
     for interval, count in sorted(reads_per_flag_interval.items()):
@@ -132,7 +131,7 @@ def main():
     for quality, count in sorted(reads_per_quality.items()):
         print(f"  Qualité {quality} : {count} reads")
 
-    print(f"Nombre de reads mappés: {mapped_reads}")
+    print(f"\nNombre de reads mappés: {mapped_reads}")
     print(f"Nombre de reads non mappés: {unmapped_reads}")
     print(f"Pourcentage de reads mappés: {mapped_percentage:.2f}%")
     print(f"Pourcentage de reads non mappés: {unmapped_percentage:.2f}%")
@@ -192,6 +191,7 @@ def main():
         plt.show()
 
     saveResultats4(mapping_resultats)
+
 
 if __name__ == "__main__":
     main()
