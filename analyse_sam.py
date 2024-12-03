@@ -114,7 +114,7 @@ def main():
     print(f"\nDictionnaire des résultats de mapping : {mapping_resultats}")
     
     # Afficher les résultats
-    print("Nombre de reads par intervalle de flag (par 10) :")
+    print("\nNombre de reads par intervalle de flag (par 10) :")
     for interval, count in sorted(reads_per_flag_interval.items()):
         print(f"  Intervalle {interval}-{interval+9} : {count} reads")
 
@@ -136,8 +136,8 @@ def main():
     print(f"Pourcentage de reads mappés: {mapped_percentage:.2f}%")
     print(f"Pourcentage de reads non mappés: {unmapped_percentage:.2f}%")
 
-    def saveResultats(reads_per_flag_interval, plotFilename='graph1.png'): 
         # Graphique du nombre de reads par intervalle de flag
+    def saveResultats(reads_per_flag_interval, plotFilename='graph1.png'): 
         plt.figure(figsize=(10, 6))
         plt.bar(reads_per_flag_interval.keys(), reads_per_flag_interval.values(), width=8)
         plt.xlabel('Intervalle de flag')
@@ -148,8 +148,8 @@ def main():
 
     saveResultats(reads_per_flag_interval)
 
-    def saveResultats2(reads_per_chromosome, total_reads, plotFilename='graph2.png'):
         # Graphique du nombre de reads par chromosome en pourcentage
+    def saveResultats2(reads_per_chromosome, total_reads, plotFilename='graph2.png'):
         chromosomes = list(reads_per_chromosome.keys())
         percentages = [(reads_per_chromosome[chrom] / total_reads) * 100 for chrom in chromosomes]
         plt.figure(figsize=(10, 6))
@@ -161,9 +161,9 @@ def main():
         plt.show()
 
     saveResultats2(reads_per_chromosome, total_reads) 
-
-    def saveResultats3(reads_per_quality, plotFilename='graph3.png'):
+      
         # Graphique du nombre de reads par qualité de mapping
+    def saveResultats3(reads_per_quality, plotFilename='graph3.png'):
         plt.figure(figsize=(10, 6))
         plt.bar(reads_per_quality.keys(), reads_per_quality.values())
         plt.xlabel('Qualité de mapping')
