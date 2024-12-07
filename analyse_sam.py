@@ -1,9 +1,11 @@
 import os 
 import matplotlib.pyplot as plt
 
+#Demande le chemin du fichier a utiliser 
 def get_file_path():
     filePath = input("Chemin de votre fichier SAM : ")
-
+    
+    #Si le chemin du fichier n'existe pas, alors le terminal affiche "Erreur". 
     if not os.path.exists(filePath): 
         print("Erreur") 
         return None 
