@@ -1,11 +1,12 @@
-import os 
+import os
 import matplotlib.pyplot as plt
+import re  # Pour manipuler les CIGAR strings
 
-#Demande le chemin du fichier a utiliser 
+# Demander le chemin du fichier à utiliser
 def get_file_path():
     filePath = input("Chemin de votre fichier SAM : ")
     
-    #Si le chemin du fichier n'existe pas, alors le terminal affiche "Erreur". 
+    # Si le chemin du fichier n'existe pas, alors le terminal affiche "Erreur". 
     if not os.path.exists(filePath): 
         print("Erreur") 
         return None 
@@ -17,10 +18,12 @@ def read_sam_file(filePath):
     try:
         # Ouvrir et lire le fichier SAM
         with open(filePath, "r") as sam_file:
+            i = 0
             for line in sam_file:
+                i += 1
                 # Ignorer les lignes de header
                 if line.startswith('@'):
-                    continue
+                    continue 
 
                 # Séparer les colonnes de la ligne
                 columns = line.strip().split('\t')
@@ -32,20 +35,34 @@ def read_sam_file(filePath):
                 position = int(columns[3])  # Colonne 4 : Position
                 quality = int(columns[4])  # Colonne 5 : Qualité
                 sequence = columns[9]  # Colonne 10 : Séquence nucléotidique
+                cigar = columns[5]  # Colonne 6 : CIGAR
 
                 # Ajouter les informations dans le dictionnaire
-                sam_data[read_name] = {
+                sam_data[i] = {
                     "flag": flag,
                     "chromosome": chromosome,
                     "position": position,
                     "quality": quality,
-                    "sequence": sequence
+                    "sequence": sequence,
+                    "cigar": cigar
                 }
+                
         print(f"\nDictionnaire SAM créé avec {len(sam_data)} entrées.\n")
         return sam_data 
     except Exception as e: 
         print("Erreur de lecture fichier")
         return None 
+
+def is_partially_mapped(cigar):
+    """
+    Vérifie si un read est partiellement mappé en fonction de sa chaîne CIGAR.
+    Un read partiellement mappé aura une partie soft-clipped ou non mappée dans le CIGAR.
+    """
+    if re.search(r'(\d+)S', cigar):  # Recherche des soft-clips ('S') dans le CIGAR
+        return True
+    if re.search(r'(\d+)H', cigar):  # Recherche des hard-clips ('H') dans le CIGAR
+        return True
+    return False
 
 def main(): 
     file_path = get_file_path()
@@ -55,42 +72,79 @@ def main():
     if not sam_data:
         return 
 
+    # Variables de read mappées, non mappées, et partiellement mappées
+    mapped_reads = 0
+    unmapped_reads = 0
+    partially_mapped_reads = 0
+
+    # Parcourir le dictionnaire des reads
+    for read_name, info in sam_data.items():
+        flag = info["flag"]
+        cigar = info["cigar"]
+
+        # Vérifier si le read est mappé, non mappé ou partiellement mappé
+        is_unmapped = flag & 4  # Flag 4 indique un read non mappé
+        if is_unmapped:
+            unmapped_reads += 1
+        elif is_partially_mapped(cigar):
+            partially_mapped_reads += 1
+        else:
+            mapped_reads += 1
+
+    # Calculer les pourcentages de reads mappés, non mappés et partiellement mappés
+    total_reads = mapped_reads + unmapped_reads + partially_mapped_reads
+
+    if total_reads == 0:
+        mapped_percentage = unmapped_percentage = partially_mapped_percentage = 0
+    else:
+        mapped_percentage = (mapped_reads / total_reads) * 100
+        unmapped_percentage = (unmapped_reads / total_reads) * 100
+        partially_mapped_percentage = (partially_mapped_reads / total_reads) * 100
+
+    # Création d'un dictionnaire avec les nouveaux résultats 
+    mapping_resultats = {
+        "mapped": mapped_percentage,
+        "unmapped": unmapped_percentage,
+        "partially_mapped": partially_mapped_percentage
+    }
+
+    # Afficher les résultats des reads mappés, non mappés et partiellement mappés
+    print(f"\nRésultats des reads mappés, non mappés et partiellement mappés")
+    print(f"Nombre de reads mappés: {mapped_reads}")
+    print(f"Nombre de reads non mappés: {unmapped_reads}")
+    print(f"Nombre de reads partiellement mappés: {partially_mapped_reads}")
+    print(f"Pourcentage de reads mappés: {mapped_percentage:.2f}%")
+    print(f"Pourcentage de reads non mappés: {unmapped_percentage:.2f}%")
+    print(f"Pourcentage de reads partiellement mappés: {partially_mapped_percentage:.2f}%")
+
+    # Demander et valider le niveau de qualité minimum
+    min_mapping_quality = 30
+    modify_quality = input(f"Le niveau de qualité minimum est défini sur {min_mapping_quality}. Souhaitez-vous le modifier ? (oui/non) : ").strip().lower()
+    if modify_quality == "oui":
+        new_quality = input("Entrez le nouveau niveau de qualité minimum : ")
+        try:
+            min_mapping_quality = int(new_quality)
+            print(f"Nouveau niveau de qualité minimum : {min_mapping_quality}")
+        except ValueError:
+            print("Valeur invalide. Le niveau de qualité minimum reste à " + str(min_mapping_quality))
+
     # Dictionnaires pour stocker les résultats des calculs
-    reads_per_flag_interval = {}
+    reads_per_flag = {}
     reads_per_chromosome = {}
     reads_per_quality = {}
 
-    # Paramètres de filtrage
-    min_mapping_quality = 30
-    only_fully_mapped = True  # Filtrer les reads non mappés
-
-    # Variables de read mappées et non mappées 
-    mapped_reads = 0
-    unmapped_reads = 0
-
-    # Parcourir le dictionnaire des reads
+    # Parcourir à nouveau le dictionnaire pour compter les flags, chromosomes et qualité
     for read_name, info in sam_data.items():
         flag = info["flag"]
         chromosome = info["chromosome"]
         quality = info["quality"]
 
-        # Vérifier si le read est mappé ou non
-        is_unmapped = flag & 4  # Flag 4 indique un read non mappé
-        if is_unmapped:
-            unmapped_reads += 1
-        else:
-            mapped_reads += 1
-
-        # Filtrer les reads si nécessaire
-        is_unmapped = flag & 4  # Flag 4 indique un read non mappé
-        if only_fully_mapped and is_unmapped:
-            continue
+        # Filtrer les reads selon la qualité minimum
         if quality < min_mapping_quality:
-            continue
+            continue  # Ignorer les reads avec une qualité inférieure au seuil
 
-        # Compter les reads par intervalle de flag
-        flag_interval = (flag // 10) * 10
-        reads_per_flag_interval[flag_interval] = reads_per_flag_interval.get(flag_interval, 0) + 1
+        # Compter les reads par flag
+        reads_per_flag[flag] = reads_per_flag.get(flag, 0) + 1
 
         # Compter les reads par chromosome
         reads_per_chromosome[chromosome] = reads_per_chromosome.get(chromosome, 0) + 1
@@ -98,101 +152,64 @@ def main():
         # Compter les reads par qualité de mapping
         reads_per_quality[quality] = reads_per_quality.get(quality, 0) + 1
 
-    # Calculer le nombre total de reads valides après filtrage
-    total_reads = sum(reads_per_chromosome.values())
-    
-    # Calculer le pourcentage de reads non mappés par rapport aux mappés
-    if mapped_reads == 0:
-        unmapped_percentage = 100 if unmapped_reads > 0 else 0
-    else:
-        unmapped_percentage = (unmapped_reads / mapped_reads) * 100
-    mapped_percentage = 100 - unmapped_percentage
+    # Afficher les résultats des flags, chromosomes et qualité sur le terminal triés
+    print("\nRésultats des flags (triés)")
+    for flag, count in sorted(reads_per_flag.items()):
+        print(f" Flag {flag}: {count} reads")
 
-    # Création d'un dictionnaire avec les nouveaux résultats 
-    mapping_resultats = {
-        "mapped": mapped_percentage,
-        "unmapped": unmapped_percentage
-    }
-    
-    # Afficher les résultats
-    print("\nNombre de reads par intervalle de flag (par 10) :")
-    for interval, count in sorted(reads_per_flag_interval.items()):
-        print(f"  Intervalle {interval}-{interval+9} : {count} reads")
+    print("\nRésultats par chromosome (triés)")
+    for chromosome, count in sorted(reads_per_chromosome.items()):
+        print(f" Chromosome {chromosome}: {count} reads")
 
-    print("\nNombre de reads par chromosome :")
-    for chrom, count in reads_per_chromosome.items():
-        print(f"  Chromosome {chrom} : {count} reads")
-
-    print("\nNombre de reads par chromosome (en pourcentage) :")
-    for chrom, count in reads_per_chromosome.items():
-        percentage = (count / total_reads) * 100  # Calcul du pourcentage
-        print(f"  Chromosome {chrom} : {count} reads ({percentage:.2f}%)")
-
-    print("\nNombre de reads par qualité de mapping :")
+    print("\nRésultats par qualité de mapping (triés) ###")
     for quality, count in sorted(reads_per_quality.items()):
-        print(f"  Qualité {quality} : {count} reads")
+        print(f" Qualité {quality}: {count} reads")
 
-    print(f"\nNombre de reads mappés: {mapped_reads}")
-    print(f"Nombre de reads non mappés: {unmapped_reads}")
-    print(f"Pourcentage de reads mappés: {mapped_percentage:.2f}%")
-    print(f"Pourcentage de reads non mappés: {unmapped_percentage:.2f}%")
+    # Compilation de mes graphiques dans une seule figure
+    def save_all_resultats():
+        fig, axs = plt.subplots(2, 2, figsize=(15, 12))
 
-        # Graphique du nombre de reads par intervalle de flag
-    def saveResultats(reads_per_flag_interval, plotFilename='graph1.png'): 
-        plt.figure(figsize=(10, 6))
-        plt.bar(reads_per_flag_interval.keys(), reads_per_flag_interval.values(), width=8)
-        plt.xlabel('Intervalle de flag')
-        plt.ylabel('Nombre de reads')
-        plt.title('Nombre de reads par intervalle de flag')
-        plt.xticks(list(reads_per_flag_interval.keys())) 
-        plt.show()
+        # Graphique 1: Nombre de reads par flag
+        axs[0, 0].bar(reads_per_flag.keys(), reads_per_flag.values())
+        axs[0, 0].set_xlabel('Flag')
+        axs[0, 0].set_ylabel('Nombre de reads')
+        axs[0, 0].set_title('Nombre de reads par flag')
 
-    saveResultats(reads_per_flag_interval)
-
-        # Graphique du nombre de reads par chromosome en pourcentage
-    def saveResultats2(reads_per_chromosome, total_reads, plotFilename='graph2.png'):
+        # Graphique 2: Nombre de reads par chromosome
         chromosomes = list(reads_per_chromosome.keys())
         percentages = [(reads_per_chromosome[chrom] / total_reads) * 100 for chrom in chromosomes]
-        plt.figure(figsize=(10, 6))
-        plt.bar(chromosomes, percentages)
-        plt.xlabel('Chromosome')
-        plt.ylabel('Pourcentage de reads (%)')
-        plt.title('Pourcentage de reads par chromosome')
-        plt.xticks(rotation=90)
+        axs[0, 1].bar(chromosomes, percentages)
+        axs[0, 1].set_xlabel('Chromosome')
+        axs[0, 1].set_ylabel('Pourcentage de reads (%)')
+        axs[0, 1].set_title('Pourcentage de reads par chromosome')
+        axs[0, 1].tick_params(axis='x', rotation=90)
+
+        # Graphique 3: Nombre de reads par qualité
+        axs[1, 0].bar(reads_per_quality.keys(), reads_per_quality.values())
+        axs[1, 0].set_xlabel('Qualité de mapping')
+        axs[1, 0].set_ylabel('Nombre de reads')
+        axs[1, 0].set_title('Nombre de reads par qualité de mapping')
+
+        # Graphique 4: Répartition des reads mappés, non mappés et partiellement mappés
+        axs[1, 1].bar(['Reads mappés', 'Reads non mappés', 'Reads partiellement mappés'],
+                      [mapped_percentage, unmapped_percentage, partially_mapped_percentage],
+                      color=['green', 'red', 'orange'])
+        axs[1, 1].set_xlabel('Catégorie de reads')
+        axs[1, 1].set_ylabel('Pourcentage')
+        axs[1, 1].set_title('Répartition des reads mappés, non mappés et partiellement mappés')
+
+        # Ajuster l'espace entre les graphes
+        plt.subplots_adjust(hspace=0.4)  # Augmenter l'espacement vertical entre les lignes
+
+        plt.tight_layout()
+
+        # Enregistrer l'image sous format PDF
+        pdf_filename = "resultats_graphiques.pdf"
+        plt.savefig(pdf_filename, format='pdf')
+        print(f"Les graphiques ont été enregistrés dans le fichier {pdf_filename}.")
         plt.show()
 
-    saveResultats2(reads_per_chromosome, total_reads) 
-      
-        # Graphique du nombre de reads par qualité de mapping
-    def saveResultats3(reads_per_quality, plotFilename='graph3.png'):
-        plt.figure(figsize=(10, 6))
-        plt.bar(reads_per_quality.keys(), reads_per_quality.values())
-        plt.xlabel('Qualité de mapping')
-        plt.ylabel('Nombre de reads')
-        plt.title('Nombre de reads par qualité de mapping')
-        plt.show()
-
-    saveResultats3(reads_per_quality)
-
-    # Création d'un dictionnaire avec les nouveaux résultats
-    mapping_resultats = {
-        "mapped": mapped_percentage,
-        "unmapped": unmapped_percentage
-    }
-    
-
-    # Graphique pour la répartition des reads mappés et non mappés
-    def saveResultats4(mapping_resultats, plotFilename='graph4.png'):
-        plt.figure(figsize=(10, 6))
-        plt.bar(['Reads mappés', 'Reads non mappés'], [mapped_percentage, unmapped_percentage], color=['green', 'red'])
-        plt.xlabel('Catégorie de reads')
-        plt.ylabel('Pourcentage')
-        plt.title('Répartition des reads mappés et non mappés')
-        plt.show()
-
-    saveResultats4(mapping_resultats)
-
-    #
+    save_all_resultats()
 
 if __name__ == "__main__":
     main()
