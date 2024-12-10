@@ -109,7 +109,7 @@ def main():
     }
 
     # Afficher les résultats des reads mappés, non mappés et partiellement mappés
-    print(f"\nRésultats des reads mappés, non mappés et partiellement mappés")
+    print(f"\n### Résultats des reads mappés, non mappés et partiellement mappés ###")
     print(f"Nombre de reads mappés: {mapped_reads}")
     print(f"Nombre de reads non mappés: {unmapped_reads}")
     print(f"Nombre de reads partiellement mappés: {partially_mapped_reads}")
@@ -119,7 +119,7 @@ def main():
 
     # Demander et valider le niveau de qualité minimum
     min_mapping_quality = 30
-    modify_quality = input(f"Le niveau de qualité minimum est défini sur {min_mapping_quality}. Souhaitez-vous le modifier ? (oui/non) : ").strip().lower()
+    modify_quality = input(f"\nLe niveau de qualité minimum est défini sur {min_mapping_quality}. \nSouhaitez-vous le modifier ? (oui/non) : ").strip().lower()
     if modify_quality == "oui":
         new_quality = input("Entrez le nouveau niveau de qualité minimum : ")
         try:
@@ -153,15 +153,15 @@ def main():
         reads_per_quality[quality] = reads_per_quality.get(quality, 0) + 1
 
     # Afficher les résultats des flags, chromosomes et qualité sur le terminal triés
-    print("\nRésultats des flags (triés)")
+    print("\nRésultats des flags")
     for flag, count in sorted(reads_per_flag.items()):
-        print(f" Flag {flag}: {count} reads")
+        print(f"Flag {flag}: {count} reads")
 
-    print("\nRésultats par chromosome (triés)")
+    print("\nRésultats par chromosome")
     for chromosome, count in sorted(reads_per_chromosome.items()):
         print(f" Chromosome {chromosome}: {count} reads")
 
-    print("\nRésultats par qualité de mapping (triés) ###")
+    print("\nRésultats par qualité de mapping")
     for quality, count in sorted(reads_per_quality.items()):
         print(f" Qualité {quality}: {count} reads")
 
@@ -182,7 +182,6 @@ def main():
         axs[0, 1].set_xlabel('Chromosome')
         axs[0, 1].set_ylabel('Pourcentage de reads (%)')
         axs[0, 1].set_title('Pourcentage de reads par chromosome')
-        axs[0, 1].tick_params(axis='x', rotation=90)
 
         # Graphique 3: Nombre de reads par qualité
         axs[1, 0].bar(reads_per_quality.keys(), reads_per_quality.values())
@@ -199,14 +198,14 @@ def main():
         axs[1, 1].set_title('Répartition des reads mappés, non mappés et partiellement mappés')
 
         # Ajuster l'espace entre les graphes
-        plt.subplots_adjust(hspace=0.4)  # Augmenter l'espacement vertical entre les lignes
+        plt.subplots_adjust(hspace=0.8)  # Augmenter l'espacement vertical entre les lignes
 
         plt.tight_layout()
 
         # Enregistrer l'image sous format PDF
         pdf_filename = "resultats_graphiques.pdf"
         plt.savefig(pdf_filename, format='pdf')
-        print(f"Les graphiques ont été enregistrés dans le fichier {pdf_filename}.")
+        print(f"\nLes graphiques ont été enregistrés dans le fichier {pdf_filename}.")
         plt.show()
 
     save_all_resultats()
