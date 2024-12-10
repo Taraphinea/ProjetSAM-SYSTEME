@@ -111,7 +111,6 @@ def main():
         "mapped": mapped_percentage,
         "unmapped": unmapped_percentage
     }
-    print(f"\nDictionnaire des résultats de mapping : {mapping_resultats}")
     
     # Afficher les résultats
     print("\nNombre de reads par intervalle de flag (par 10) :")
@@ -178,8 +177,7 @@ def main():
         "mapped": mapped_percentage,
         "unmapped": unmapped_percentage
     }
-    print(f"\nDictionnaire des résultats de mapping :")
-    print(mapping_resultats)
+    
 
     # Graphique pour la répartition des reads mappés et non mappés
     def saveResultats4(mapping_resultats, plotFilename='graph4.png'):
@@ -192,6 +190,7 @@ def main():
 
     saveResultats4(mapping_resultats)
 
+    #
 
 if __name__ == "__main__":
     main()
