@@ -12,11 +12,11 @@ This project aims to analyze and extract relevant information from SAM (Sequence
 ---
 ## 📂 Project Structure
 
-- README.md: Documentation for the project.-
-- verif_sam.sh: A Bash script to validate the SAM file format.
-- analyse_sam.py: A Python script to extract data and perform analyses.
-- headmapping.sam: An example SAM file for testing the workflow.
-- Figure_exemple-headmapping.png: An example of graphical results generated using headmapping.sam
+- `README.md`: Documentation for the project.-
+- `verif_sam.sh`: A Bash script to validate the SAM file format.
+- `analyse_sam.py`: A Python script to extract data and perform analyses.
+- `headmapping.sam`: An example SAM file for testing the workflow.
+- `Figure_exemple-headmapping.png`: An example of graphical results generated using `headmapping.sam`.
 ---
 ## 🛠 Prerequisites
 Before you start, make sure to have installed:
