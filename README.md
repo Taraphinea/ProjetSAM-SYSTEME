@@ -6,16 +6,16 @@ This project aims to analyze and extract relevant information from SAM (Sequence
 ## 🚀 Main Features
 
 - **SAM Format Validation**: Validates headers and the minimum number of columns.
-- **Key Information Extraction**: Extracts read names, flags, chromosome, position, quality, and sequence.
+- **Key Information Extraction**: Extracts read names, flags, chromosome, positions, quality, and sequence.
 - **Data Analysis**: Calculates important metrics such as mapping quality.
 
 ---
 ## 📂 Project Structure
 
-- `README.md`: Documentation for the project.-
+- `README.md`: Documentation for the project.
 - `verif_sam.sh`: A Bash script to validate the SAM file format.
 - `analyse_sam.py`: A Python script to extract data and perform analyses.
-- `headmapping.sam`: An example SAM file for testing the workflow.
+- `headmapping.sam`: An example SAM file for workflow testing.
 - `Figure_exemple-headmapping.png`: An example of graphical results generated using `headmapping.sam`.
 ---
 ## 🛠 Prerequisites
